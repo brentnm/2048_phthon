@@ -29,7 +29,7 @@ def display():
             if element == 0:
                 currRow += " " * numSpaces + "|"
             else: 
-                currRow += (" " * (numSpaces - len(str(element))))str(element) + "|"
+                currRow += (" " * (numSpaces - len(str(element)))) + str(element) + "|"
         # print generated row
         print(currRow)
     print()
@@ -108,5 +108,5 @@ def merge_down(currentBoard):
     return currentBoard
 
 
-merge_down(board)
+merge_up(board)
 display()

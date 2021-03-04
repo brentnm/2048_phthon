@@ -47,4 +47,66 @@ def mergeOneRowL(row):
                 row[i] = 0
     for i in range(boardSize - 1):
         # test if current value is identical to the one next to it
-        
+        if row[i] == row[i + 1]:
+            row[i] *= 2
+            row[i +1] = 0
+    # move everything to the left again
+    for i in range(boardSize - 1, 0, -1):
+        if row[i - 1] == 0:
+            row[i - 1] = row[i]
+            row[i] = 0
+    return row
+# merge the whole board left
+def merge_left(currentBoard):
+    for i in range(boardSize):
+        currentBoard[i] = mergeOneRowL(currentBoard[i])
+    
+    return currentBoard
+
+# reverse the order of one row
+def reverse(row):
+    # add all the elements of the row to a new list in reverse order
+    new = []
+    for i in range(boardSize - 1, -1, -1):
+        new.append(row[i])
+    return new 
+
+# merge the whole board right
+def merge_right(currentBoard):
+    for i in range(boardSize):
+        # reverse the row, merge left, reverse back
+        currentBoard[i] = reverse(currentBoard[i])
+        currentBoard[i] = mergeOneRowL(currentBoard[i])
+        currentBoard[i] = reverse(currentBoard[i])
+    return currentBoard
+
+# this function transposes the board 
+def transpose(currentBoard):
+    for j in range(boardSize):
+        for i in range(j, boardSize):
+            if not i == j:
+                temp = currentBoard[j][i]
+                currentBoard[j][i] = currentBoard[i][j]
+                currentBoard[i][j] = temp
+    return currentBoard
+
+# merges the board up
+def merge_up(currentBoard):
+    # transpose board, merge left, transpose back
+    currentBoard = transpose(currentBoard)
+    currentBoard = merge_left(currentBoard)
+    currentBoard = transpose(currentBoard)
+
+    return currentBoard
+
+# merge down
+def merge_down(currentBoard):
+    currentBoard = transpose(currentBoard)
+    currentBoard = merge_right(currentBoard)
+    currentBoard = transpose(currentBoard)
+
+    return currentBoard
+
+
+merge_down(board)
+display()

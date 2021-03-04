@@ -1,1 +1,1 @@
-# 2048_phthon
+# 2048_python

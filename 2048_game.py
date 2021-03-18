@@ -7,6 +7,7 @@
 # set up win and loss functions
 
 import random
+import copy
 
 # create board size variable
 boardSize = 4
@@ -33,8 +34,6 @@ def display():
         # print generated row
         print(currRow)
     print()
-
-display()
 
 # merge one row left
 def mergeOneRowL(row):
@@ -114,6 +113,42 @@ def pickNewValue():
     else:
         return 2
 
+# add a new value function
+def addNewValue():
+    rowNum = random.randint(0, boardSize - 1)
+    colNum = random.randint(0, boardSize - 1)
+
+    # pick spots until one found is empty
+    while not board[rowNum][colNum] == 0:
+        rowNum = random.randint(0, boardSize - 1)
+        colNum = random.randint(0, boardSize - 1)
+
+    # fill the empty space
+    board[rowNum][colNum] = pickNewValue()
+
+# test if win
+def won():
+    for row in board:
+        if 2048 in row:
+            return True
+    return False
+
+# test if loss
+def noMoves():
+    tempboard1 = copy.deepcopy(board)
+    tempboard2 = copy.deepcopy(board)
+    # test in every possible direction
+    tempboard1 = merge_down(tempboard1)
+    if tempboard1 == tempboard2:
+        tempboard1 = merge_up(tempboard1)
+        if tempboard1 == tempboard2:
+            tempboard1 = merge_left(tempboard1)
+            if tempboard1 == tempboard2:
+                tempboard1 = merge_right(tempboard1)
+                if tempboard1 == tempboard2:
+                    return True
+    return False
+
 # create an empty board
 board = []
 for i in range(boardSize):
@@ -133,4 +168,48 @@ while numNeeded > 0:
         numNeeded -= 1
 
 print("Welcome to 2048! The goal of this game is to combine numbers to get to 2048, by merging the board in different directions. To merge, press 'd' to merge right, 'a' to merge left, 'w' to merge up, and 's' to merge down. \n\nHere is the starting board:")
+
 display()
+
+gameOver = False
+
+# ask the user for new moves
+while not gameOver:
+    move = input("which way do you want to merge? ")
+
+    # assume they enter a valid input
+    validInput = True
+
+    # create a copy of the board
+    tempBoard = copy.deepcopy(board)
+
+    if move == "d":
+        board = merge_right(board)
+    elif move == "w":
+        board = merge_up(board)
+    elif move == "a":
+        board = merge_left(board)
+    elif move == "s":
+        board = merge_down(board)
+    else:
+        validInput = False
+    
+    if not validInput:
+        print("Your input was not valid, please try again")
+    else:
+        # test if move was unsuccessful 
+        if board == tempBoard:
+            print("Try a differnt direction")
+        else:
+            if won():
+                display()
+                print("You Won!")
+                gameOver = True
+            else:
+            addNewValue()
+
+            display()
+
+            if noMoves():
+                print("Sorry, no more possible moves, you lose!")
+                gameOver = True

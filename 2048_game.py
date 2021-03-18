@@ -6,7 +6,7 @@
 # adding new values for every move
 # set up win and loss functions
 
-board = [[0, 0, 2, 2], [2, 2, 2, 0], [4, 0, 0, 4], [0, 2, 0, 0]]
+import random
 
 # create board size variable
 boardSize = 4
@@ -107,6 +107,30 @@ def merge_down(currentBoard):
 
     return currentBoard
 
+# pick either a two or four function
+def pickNewValue():
+    if random.randint(1,8) == 1:
+        return 4
+    else:
+        return 2
 
-merge_up(board)
+# create an empty board
+board = []
+for i in range(boardSize):
+    row = []
+    for j in range(boardSize):
+        row.append(0)
+    board.append(row)
+
+# fill two slots to start the game
+numNeeded = 2
+while numNeeded > 0:
+    rowNum = random.randint(0, boardSize - 1)
+    colNum = random.randint(0, boardSize - 1)
+
+    if board[rowNum][colNum] == 0:
+        board[rowNum][colNum] = pickNewValue()
+        numNeeded -= 1
+
+print("Welcome to 2048! The goal of this game is to combine numbers to get to 2048, by merging the board in different directions. To merge, press 'd' to merge right, 'a' to merge left, 'w' to merge up, and 's' to merge down. \n\nHere is the starting board:")
 display()

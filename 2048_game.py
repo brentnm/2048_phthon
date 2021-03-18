@@ -206,10 +206,10 @@ while not gameOver:
                 print("You Won!")
                 gameOver = True
             else:
-            addNewValue()
+                addNewValue()
 
-            display()
+                display()
 
-            if noMoves():
-                print("Sorry, no more possible moves, you lose!")
-                gameOver = True
+                if noMoves():
+                    print("Sorry, no more possible moves, you lose!")
+                    gameOver = True

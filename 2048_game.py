@@ -10,131 +10,127 @@ import random
 import copy
 
 # create board size variable
-boardSize = 4
+BOARD_SIZE = 4
 
-# print board function
 def display():
+    '''print board function'''
     # find out which value is the largest
     largest = board[0][0]
     for row in board:
         for element in row:
             if element > largest:
                 largest = element
-    
     # set the max number of spaces needed to the length of the largest value
-    numSpaces = len(str(largest))
+    num_spaces = len(str(largest))
 
     for row in board:
-        currRow = "|"
+        curr_row = "|"
         for element in row:
             if element == 0:
-                currRow += " " * numSpaces + "|"
-            else: 
-                currRow += (" " * (numSpaces - len(str(element)))) + str(element) + "|"
+                curr_row += " " * num_spaces + "|"
+            else:
+                curr_row += (" " * (num_spaces - len(str(element)))) + str(element) + "|"
         # print generated row
-        print(currRow)
+        print(curr_row)
     print()
 
-# merge one row left
-def mergeOneRowL(row):
+def merge_one_row_l(row):
+    '''merge one row left'''
     # move every element left
-    for j in range(boardSize - 1):
-        for i in range(boardSize - 1, 0, -1):
+    for _ in range(BOARD_SIZE - 1):
+        for i in range(BOARD_SIZE - 1, 0, -1):
         # test for empty space and if so move
             if row[i - 1] == 0:
                 row[i - 1] = row[i]
                 row[i] = 0
-    for i in range(boardSize - 1):
+    for i in range(BOARD_SIZE - 1):
         # test if current value is identical to the one next to it
         if row[i] == row[i + 1]:
             row[i] *= 2
             row[i +1] = 0
     # move everything to the left again
-    for i in range(boardSize - 1, 0, -1):
+    for i in range(BOARD_SIZE - 1, 0, -1):
         if row[i - 1] == 0:
             row[i - 1] = row[i]
             row[i] = 0
     return row
-# merge the whole board left
-def merge_left(currentBoard):
-    for i in range(boardSize):
-        currentBoard[i] = mergeOneRowL(currentBoard[i])
-    
-    return currentBoard
+def merge_left(current_board):
+    '''merge the whole board left'''
+    for i in range(BOARD_SIZE):
+        current_board[i] = merge_one_row_l(current_board[i])
+    return current_board
 
-# reverse the order of one row
 def reverse(row):
+    '''reverse the order of one row'''
     # add all the elements of the row to a new list in reverse order
     new = []
-    for i in range(boardSize - 1, -1, -1):
+    for i in range(BOARD_SIZE - 1, -1, -1):
         new.append(row[i])
-    return new 
+    return new
 
-# merge the whole board right
-def merge_right(currentBoard):
-    for i in range(boardSize):
+def merge_right(current_board):
+    '''merge the whole board right'''
+    for i in range(BOARD_SIZE):
         # reverse the row, merge left, reverse back
-        currentBoard[i] = reverse(currentBoard[i])
-        currentBoard[i] = mergeOneRowL(currentBoard[i])
-        currentBoard[i] = reverse(currentBoard[i])
-    return currentBoard
-
-# this function transposes the board 
-def transpose(currentBoard):
-    for j in range(boardSize):
-        for i in range(j, boardSize):
+        current_board[i] = reverse(current_board[i])
+        current_board[i] = merge_one_row_l(current_board[i])
+        current_board[i] = reverse(current_board[i])
+    return current_board
+def transpose(current_board):
+    '''this function transposes the board'''
+    for j in range(BOARD_SIZE):
+        for i in range(j, BOARD_SIZE):
             if not i == j:
-                temp = currentBoard[j][i]
-                currentBoard[j][i] = currentBoard[i][j]
-                currentBoard[i][j] = temp
-    return currentBoard
-
-# merges the board up
-def merge_up(currentBoard):
+                temp = current_board[j][i]
+                current_board[j][i] = current_board[i][j]
+                current_board[i][j] = temp
+    return current_board
+def merge_up(current_board):
+    '''merges the board up'''
     # transpose board, merge left, transpose back
-    currentBoard = transpose(currentBoard)
-    currentBoard = merge_left(currentBoard)
-    currentBoard = transpose(currentBoard)
+    current_board = transpose(current_board)
+    current_board = merge_left(current_board)
+    current_board = transpose(current_board)
 
-    return currentBoard
+    return current_board
 
-# merge down
-def merge_down(currentBoard):
-    currentBoard = transpose(currentBoard)
-    currentBoard = merge_right(currentBoard)
-    currentBoard = transpose(currentBoard)
+def merge_down(current_board):
+    '''merge down'''
+    current_board = transpose(current_board)
+    current_board = merge_right(current_board)
+    current_board = transpose(current_board)
 
-    return currentBoard
+    return current_board
 
-# pick either a two or four function
-def pickNewValue():
+def pick_new_value():
+    '''pick either a two or four function'''
     if random.randint(1,8) == 1:
         return 4
     else:
         return 2
 
-# add a new value function
-def addNewValue():
-    rowNum = random.randint(0, boardSize - 1)
-    colNum = random.randint(0, boardSize - 1)
+def add_new_value():
+    '''add a new value function'''
+    row_num = random.randint(0, BOARD_SIZE - 1)
+    col_num = random.randint(0, BOARD_SIZE - 1)
 
     # pick spots until one found is empty
-    while not board[rowNum][colNum] == 0:
-        rowNum = random.randint(0, boardSize - 1)
-        colNum = random.randint(0, boardSize - 1)
+    while not board[row_num][col_num] == 0:
+        row_num = random.randint(0, BOARD_SIZE - 1)
+        col_num = random.randint(0, BOARD_SIZE - 1)
 
     # fill the empty space
-    board[rowNum][colNum] = pickNewValue()
+    board[row_num][col_num] = pick_new_value()
 
-# test if win
 def won():
+    '''test if win'''
     for row in board:
         if 2048 in row:
             return True
     return False
 
-# test if loss
-def noMoves():
+def no_moves():
+    '''test if loss'''
     tempboard1 = copy.deepcopy(board)
     tempboard2 = copy.deepcopy(board)
     # test in every possible direction
@@ -151,34 +147,36 @@ def noMoves():
 
 # create an empty board
 board = []
-for i in range(boardSize):
+for i in range(BOARD_SIZE):
     row = []
-    for j in range(boardSize):
+    for j in range(BOARD_SIZE):
         row.append(0)
     board.append(row)
 
 # fill two slots to start the game
-numNeeded = 2
-while numNeeded > 0:
-    rowNum = random.randint(0, boardSize - 1)
-    colNum = random.randint(0, boardSize - 1)
+NUM_NEEDED = 2
+while NUM_NEEDED > 0:
+    row_num = random.randint(0, BOARD_SIZE - 1)
+    col_num = random.randint(0, BOARD_SIZE - 1)
 
-    if board[rowNum][colNum] == 0:
-        board[rowNum][colNum] = pickNewValue()
-        numNeeded -= 1
+    if board[row_num][col_num] == 0:
+        board[row_num][col_num] = pick_new_value()
+        NUM_NEEDED -= 1
 
-print("Welcome to 2048! The goal of this game is to combine numbers to get to 2048, by merging the board in different directions. To merge, press 'd' to merge right, 'a' to merge left, 'w' to merge up, and 's' to merge down. \n\nHere is the starting board:")
+print("Welcome to 2048! The goal of this game is to combine numbers to get to 2048, "\
+      "by merging the board in different directions. To merge, press 'd' to merge right, "\
+      "'a' to merge left, 'w' to merge up, and 's' to merge down. \n\nHere is the starting board:")
 
 display()
 
-gameOver = False
+GAME_OVER = False
 
 # ask the user for new moves
-while not gameOver:
+while not GAME_OVER:
     move = input("which way do you want to merge? ")
 
     # assume they enter a valid input
-    validInput = True
+    VALID_INPUT = True
 
     # create a copy of the board
     tempBoard = copy.deepcopy(board)
@@ -192,24 +190,23 @@ while not gameOver:
     elif move == "s":
         board = merge_down(board)
     else:
-        validInput = False
-    
-    if not validInput:
+        VALID_INPUT = False
+    if not VALID_INPUT:
         print("Your input was not valid, please try again")
     else:
-        # test if move was unsuccessful 
+        # test if move was unsuccessful
         if board == tempBoard:
             print("Try a differnt direction")
         else:
             if won():
                 display()
                 print("You Won!")
-                gameOver = True
+                GAME_OVER = True
             else:
-                addNewValue()
+                add_new_value()
 
                 display()
 
-                if noMoves():
+                if no_moves():
                     print("Sorry, no more possible moves, you lose!")
-                    gameOver = True
+                    GAME_OVER = True

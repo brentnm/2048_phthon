@@ -1,4 +1,4 @@
-# start writing code
+'''start writing code'''
 # 1 set up board
 # create merging functions
 # set start of game

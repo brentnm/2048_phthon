@@ -147,20 +147,20 @@ def no_moves():
 
 # create an empty board
 board = []
-for i in range(BOARD_SIZE):
-    row = []
-    for j in range(BOARD_SIZE):
-        row.append(0)
-    board.append(row)
+for _ in range(BOARD_SIZE):
+    brow = []
+    for _ in range(BOARD_SIZE):
+        brow.append(0)
+    board.append(brow)
 
 # fill two slots to start the game
 NUM_NEEDED = 2
 while NUM_NEEDED > 0:
-    row_num = random.randint(0, BOARD_SIZE - 1)
-    col_num = random.randint(0, BOARD_SIZE - 1)
+    row_n = random.randint(0, BOARD_SIZE - 1)
+    col_n = random.randint(0, BOARD_SIZE - 1)
 
-    if board[row_num][col_num] == 0:
-        board[row_num][col_num] = pick_new_value()
+    if board[row_n][col_n] == 0:
+        board[row_n][col_n] = pick_new_value()
         NUM_NEEDED -= 1
 
 print("Welcome to 2048! The goal of this game is to combine numbers to get to 2048, "\
